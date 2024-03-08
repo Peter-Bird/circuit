@@ -32,6 +32,7 @@ func (j *Joint) WeldTo(o Connection) {
 	fmt.Printf("WeldTo %v  %v\n", j, o)
 	j.Attach(o)
 	o.Attach(j)
+	fmt.Printf("Attached %v  %v\n", j, o)
 }
 
 func (j *Joint) Attach(o Connection) {
