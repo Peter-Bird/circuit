@@ -60,6 +60,16 @@ func TestT2(t *testing.T) {
 	wire1.Weld(wire2)
 	wire1.String()
 	wire2.String()
+
+	fmt.Println("\nSet Wire1 High:")
+	wire1.Set(core.High)
+	wire1.String()
+	wire2.String()
+
+	fmt.Println("\nSet Wire2 Low:")
+	wire2.Set(core.Low)
+	wire1.String()
+	wire2.String()
 }
 
 // TestNewWire checks if a new wire is correctly initialized.

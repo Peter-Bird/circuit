@@ -26,7 +26,7 @@ func New(label string) *Wire {
 	}
 }
 
-func (w *Wire) Weld(other core.Weldable) {
+func (w *Wire) Weld(other core.Connection) {
 	w.WeldTo(other)
 
 	// An attached Wire can transmit current
@@ -41,14 +41,13 @@ func (w *Wire) Set(level core.SigType) {
 	if level != old {
 		w.level = level
 
-		// for i := 0; i < 2; i++ {
-		// 	edge := w.edges[i]
-		// 	if edge != nil {
-		// 		if edge.Get() == old {
-		// 			edge.Set(level)
-		// 		}
-		// 	}
-		// }
+		for _, partner := range w.Partners {
+			fmt.Printf("Partner %v\n", partner)
+			if partner.Get() == old {
+				fmt.Print("Setting Partner\n")
+				partner.Set(level)
+			}
+		}
 	}
 }
 
@@ -56,5 +55,11 @@ func (w *Wire) Get() core.SigType { return w.level }
 func (w *Wire) GetLabel() string  { return w.label }
 
 func (w *Wire) String() {
-	fmt.Printf("%v\n", w)
+	fmt.Printf("%s is %d, ", w.label, w.level)
+
+	for idx, part := range w.Partners {
+		fmt.Printf("P: %d, is: %v\n", idx, part)
+	}
+
+	fmt.Println()
 }
