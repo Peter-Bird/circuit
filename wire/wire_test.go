@@ -17,15 +17,15 @@ func TestT1(t *testing.T) {
 
 	fmt.Print("\nMake:\t\t")
 	wire1 := wire.New("Wire1")
-	Display(*wire1)
+	Display(wire1)
 
 	fmt.Print("Set High:\t")
 	wire1.Set(core.High)
-	Display(*wire1)
+	Display(wire1)
 
 	fmt.Print("Set Low:\t")
 	wire1.Set(core.Low)
-	Display(*wire1)
+	Display(wire1)
 
 	fmt.Println()
 }
@@ -42,42 +42,42 @@ func TestT2(t *testing.T) {
 
 	fmt.Print("\nMake:\t\t")
 	wire1 := wire.New("Wire1")
-	Display(*wire1)
+	Display(wire1)
 
 	fmt.Print("Make:\t\t")
 	wire2 := wire.New("Wire2")
-	Display(*wire2)
+	Display(wire2)
 
 	fmt.Print("Make:\t\t")
 	wire3 := wire.New("Wire3")
-	Display(*wire3)
+	Display(wire3)
 
 	fmt.Println("\nWeld:")
 	wire1.WeldTo(wire2)
 	wire2.WeldTo(wire3)
-	Display(*wire1)
-	Display(*wire2)
-	Display(*wire3)
+	Display(wire1)
+	Display(wire2)
+	Display(wire3)
 
 	fmt.Println("\nSet Wire1 High:")
 	wire1.Set(core.High)
-	Display(*wire1)
-	Display(*wire2)
-	Display(*wire3)
+	Display(wire1)
+	Display(wire2)
+	Display(wire3)
 
 	fmt.Println("\nSet Wire2 Low:")
 	wire2.Set(core.Low)
-	Display(*wire1)
-	Display(*wire2)
-	Display(*wire3)
+	Display(wire1)
+	Display(wire2)
+	Display(wire3)
 }
 
 func TestT3(t *testing.T) {
 	const imgT2 = `
       Wire1    Wire2      
    ⚫━━━━━━━⚪━━━━━━━⚪
-                      ┃ Wire 3
-      Wire5    Wire4  ┃
+                         ┃ Wire3
+      Wire5    Wire4     ┃
    ⚫━━━━━━━⚪━━━━━━━⚪
 `
 	fmt.Print(imgT2)
@@ -96,29 +96,29 @@ func TestT3(t *testing.T) {
 	// Open circuit
 	fmt.Println("\nSet Wire1 High:")
 	wire1.Set(core.High)
-	Display(*wire1)
-	Display(*wire2)
-	Display(*wire3)
-	Display(*wire4)
-	Display(*wire5)
+	Display(wire1)
+	Display(wire2)
+	Display(wire3)
+	Display(wire4)
+	Display(wire5)
 
 	// Propogate
 	fmt.Println("\n\nSet Wire2 High:")
 	wire2.Set(core.High)
-	Display(*wire1)
-	Display(*wire2)
-	Display(*wire3)
-	Display(*wire4)
-	Display(*wire5)
+	Display(wire1)
+	Display(wire2)
+	Display(wire3)
+	Display(wire4)
+	Display(wire5)
 
 	// Back Propogate
 	fmt.Println("\n\nSet Wire3 Low:")
 	wire3.Set(core.Low)
-	Display(*wire1)
-	Display(*wire2)
-	Display(*wire3)
-	Display(*wire4)
-	Display(*wire5)
+	Display(wire1)
+	Display(wire2)
+	Display(wire3)
+	Display(wire4)
+	Display(wire5)
 }
 
 // TestNewWire checks if a new wire is correctly initialized.
@@ -132,14 +132,6 @@ func TestNewWire(t *testing.T) {
 	}
 }
 
-func Display(w wire.Wire) {
+func Display[T core.Stringer](w T) {
 	fmt.Println(w.String())
 }
-
-/*
-   .    W1-P1          W1-P2
-   .     ↓     Wire1    ↓     Wire2
-   .	  ⚪━━━━━━━━━━━━━⚪━━━━━━━━━━━━━⚪
-   .                     ↑              ↑
-   .                    W2-P1          W2-P2
-*/

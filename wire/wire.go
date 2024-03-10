@@ -59,17 +59,10 @@ func (w *Wire) GetLabel() string  { return w.label }
 func (w *Wire) String() string {
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s is %v, ", w.label, w.level)
+	fmt.Fprintf(&builder, "%s is %v, ", w.GetLabel(), w.Get())
 
 	for idx, part := range w.Partners {
-		// Attempt to assert the type of part to *Wire
-		if wirePart, ok := part.(*Wire); ok {
-			// If successful, wirePart is now a *Wire and we can access its label
-			fmt.Fprintf(&builder, "P: %d, is: %v, ", idx, wirePart.label)
-		} else {
-			// If not successful, part is not a *Wire and you can handle accordingly
-			fmt.Fprintf(&builder, "P: %d, is of a different type\n", idx)
-		}
+		fmt.Fprintf(&builder, "P: %d, is: %v, ", idx, part.(*Wire).GetLabel())
 	}
 
 	return builder.String()
