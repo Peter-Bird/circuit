@@ -1,17 +1,15 @@
 package wire
 
 import (
-	"fmt"
-	"strings"
+	"log"
 
 	"circuit/core"
 )
 
 /*
-.           label
-.	  ⚫━━━━━━━━━━━━━⚫
-.     ↑              ↑
-.   edge[0]        edge[1]
+.             "label"
+.	  ⚫━━━━━━━━━━━━━━━━━━━━⚫
+'       level (High, Low, Z)
 */
 
 type Wire struct {
@@ -34,6 +32,10 @@ func (w *Wire) WeldTo(o core.Joinable) {
 }
 
 func (w *Wire) Attach(o core.Joinable) {
+	if len(w.Partners) >= 2 {
+		log.Println("Don't")
+		return
+	}
 	w.Partners = append(w.Partners, o)
 }
 
@@ -44,9 +46,9 @@ func (w *Wire) Set(level core.SigType) {
 		if level != old {
 			w.level = level
 
-			for _, partner := range w.Partners {
-				if partner.Get() == old {
-					partner.Set(level)
+			for _, p := range w.Partners {
+				if p.Get() == old {
+					p.Set(level)
 				}
 			}
 		}
@@ -55,15 +57,3 @@ func (w *Wire) Set(level core.SigType) {
 
 func (w *Wire) Get() core.SigType { return w.level }
 func (w *Wire) GetLabel() string  { return w.label }
-
-func (w *Wire) String() string {
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s is %v, ", w.GetLabel(), w.Get())
-
-	for idx, part := range w.Partners {
-		fmt.Fprintf(&builder, "P: %d, is: %v, ", idx, part.(*Wire).GetLabel())
-	}
-
-	return builder.String()
-}

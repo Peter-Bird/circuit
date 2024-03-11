@@ -5,9 +5,9 @@ package core
 type SigType int
 
 const (
-	Low  SigType = iota // 0
-	High                // 1
-	Z                   // High-Impedance
+	Low SigType = iota
+	High
+	Z // High-Impedance
 )
 
 type Joinable interface {
@@ -18,15 +18,10 @@ type Joinable interface {
 	Set(SigType)
 
 	GetLabel() string
-	Stringer
 }
 
 // Joint is the result of welding
 // conducting elements together
 type Joint struct {
 	Partners []Joinable
-}
-
-type Stringer interface {
-	String() string
 }
