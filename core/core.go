@@ -11,7 +11,7 @@ const (
 )
 
 type Joinable interface {
-	WeldTo(other Joinable)
+	//	WeldTo(other Joinable)
 	Attach(other Joinable)
 
 	Get() SigType
