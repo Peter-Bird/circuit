@@ -10,18 +10,14 @@ const (
 	Z // High-Impedance
 )
 
-type Joinable interface {
-	//	WeldTo(other Joinable)
-	Attach(other Joinable)
-
-	Get() SigType
-	Set(SigType)
-
-	GetLabel() string
+type Digital interface {
+	Attach(Digital)
+	Set(SigType, Digital)
 }
 
-// Joint is the result of welding
-// conducting elements together
-type Joint struct {
-	Partners []Joinable
-}
+// // Port is the connection
+// // point to the Source.
+// type Port struct {
+// 	Label    string
+// 	EndPoint Digital
+// }

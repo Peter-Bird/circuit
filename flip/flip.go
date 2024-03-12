@@ -2,6 +2,7 @@ package flip
 
 import (
 	"circuit/core"
+	"log"
 )
 
 type SwitchState bool
@@ -12,42 +13,48 @@ const (
 )
 
 type Switch struct {
-	core.Joint
+	State SwitchState
 	label string
 	level core.SigType
-	State SwitchState
+
+	endPoints []core.Digital
 }
 
 func New(label string) *Switch {
 	return &Switch{
-		Joint: core.Joint{},
 		State: Off,
 		level: core.Z,
 		label: label,
+
+		endPoints: []core.Digital{},
 	}
 }
 
 func (s *Switch) Toggle() {
 	s.State = !s.State
+}
 
-	for _, p := range s.Partners {
-		if s.State == On {
-			p.Set(p.Get())
-		} else {
-			p.Set(core.Low)
+func (s *Switch) Attach(o core.Digital) {
+	if len(s.endPoints) >= 2 {
+		log.Println("Don't")
+		return
+	}
+	s.endPoints = append(s.endPoints, o)
+}
+
+func (s *Switch) Set(level core.SigType, source core.Digital) {
+	if s.State == On {
+		if len(s.endPoints) == 2 {
+			s.level = level
+
+			for _, p := range s.endPoints {
+				if p != source {
+					p.Set(level, s)
+				}
+			}
 		}
 	}
 }
 
-func (s *Switch) Attach(o core.Joinable) {
-	s.Partners = append(s.Partners, o)
-	if s.State == On {
-		o.Set(o.Get())
-	} else {
-		o.Set(core.Low)
-	}
-}
-
-func (s *Switch) Set(z core.SigType) {}
-func (s *Switch) Get() core.SigType  { return s.level }
-func (s *Switch) GetLabel() string   { return s.label }
+func (s *Switch) Get() core.SigType { return s.level }
+func (s *Switch) GetLabel() string  { return s.label }

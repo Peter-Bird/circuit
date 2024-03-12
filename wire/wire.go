@@ -12,48 +12,47 @@ import (
 '       level (High, Low, Z)
 */
 
+var _ core.Digital = (*Wire)(nil)
+
 type Wire struct {
-	core.Joint
 	label string
 	level core.SigType
+
+	endPoints []core.Digital
 }
 
 func New(label string) *Wire {
 	return &Wire{
-		Joint: core.Joint{},
 		label: label,
 		level: core.Z,
+
+		endPoints: []core.Digital{},
 	}
 }
 
-func (w *Wire) WeldTo(o core.Joinable) {
+func (w *Wire) Join(o core.Digital) {
 	w.Attach(o)
 	o.Attach(w)
 }
 
-func (w *Wire) Attach(o core.Joinable) {
-	if len(w.Partners) >= 2 {
+func (w *Wire) Attach(o core.Digital) {
+	if len(w.endPoints) >= 2 {
 		log.Println("Don't")
 		return
 	}
-	w.Partners = append(w.Partners, o)
+	w.endPoints = append(w.endPoints, o)
 }
 
-func (w *Wire) Set(level core.SigType) {
-	if len(w.Partners) == 2 {
-		old := w.level
+func (w *Wire) Set(level core.SigType, source core.Digital) {
+	if len(w.endPoints) == 2 {
+		w.level = level
 
-		if level != old {
-			w.level = level
-
-			for _, p := range w.Partners {
-				if p.Get() == old {
-					p.Set(level)
-				}
+		for _, p := range w.endPoints {
+			if p != source {
+				p.Set(level, w)
 			}
 		}
 	}
 }
 
 func (w *Wire) Get() core.SigType { return w.level }
-func (w *Wire) GetLabel() string  { return w.label }
